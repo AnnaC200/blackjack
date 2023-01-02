@@ -76,14 +76,29 @@ const App = () => {
 
     const newCards = deckOfCards.splice(0, 4);
     setDealersCards([newCards[0], newCards[2]]);
+
+    const getValue = () => {
+      let data = newCards.split()
+      let value = data[0];
+
+      if(isNaN(value)) {
+        if (value === "A") {
+          return 11;
+        }
+        return 10;
+      }
+    
+    }
+    
+
     setPlayersCards([newCards[1], newCards[3]]);
 
     console.log(dealersCards, playersCards);
   };
 
-  const count = () => {
+ 
 
-  }
+
 
  
 
