@@ -57,9 +57,11 @@ const deckOfCards = [
 ];
 
 const App = () => {
-  const [dealersCards, setDealersCards] = useState(0);
-  const [playersCards, setPlayersCards] = useState(0);
- 
+  const [dealersCards, setDealersCards] = useState([]);
+  const [playersCards, setPlayersCards] = useState([]);
+  const [playersValue, setPlayersValue] = useState(0);
+  const [dealersValue, setDealersValue] = useState(0);
+  const [turn, setTurn] = useState(null)
 
   const shuffleCards = () => {
     for (let i = 0; i < deckOfCards.length; i++) {
@@ -73,43 +75,65 @@ const App = () => {
   };
 
   const newGame = () => {
-
     const newCards = deckOfCards.splice(0, 4);
-    setDealersCards([newCards[0], newCards[2]]);
+    setDealersCards([newCards[0], newCards[1]]);
+    setPlayersCards([newCards[2], newCards[3]]);
+    setTurn("player")
 
-    const getValue = () => {
-      let data = newCards.split()
-      let value = data[0];
-
-      if(isNaN(value)) {
-        if (value === "A") {
-          return 11;
-        }
-        return 10;
-      }
+    console.log("Dealers cards: " + newCards[0]);
+    console.log("Players cards: " + newCards[2], newCards[3]);
     
-    }
-    
-
-    setPlayersCards([newCards[1], newCards[3]]);
-
-    console.log(dealersCards, playersCards);
   };
 
- 
+  const getValueOfHand = (cards) => {
+    // loop over the given hand of cards and use substring to get the letter or number using substring
+    const values = cards.map((card) => {
+      const value = card.substring(0, card.length - 1);
+      if (value === "A") {
+        return 11;
+      }
+      if (value.match(/^[JQK]/)) {
+        return 10;
+      }
+      return Number(value);
+    });
 
+    return values.reduce((a, c) => a + c, 0);
+  };
 
+  const handleGetValue = () => {
+    const playersValue = getValueOfHand(playersCards);
+    setPlayersValue(playersValue)
+    console.log(playersCards);
+    // this console displays the players value 
+    console.log(playersValue);
 
- 
+    const dealersValue = getValueOfHand(dealersCards);
+    setDealersValue(dealersValue)
+    console.log(dealersCards);
+    // this console displays the players value 
+    console.log(dealersValue);
 
+  };
 
+  const handleStand = () => {
+    setTurn("Dealer")
+    
+  }
+
+  const handleHit = () => {
+    const newCard = deckOfCards.splice(0, 1);
+    setPlayersCards([...playersCards, newCard[0]]);
+  }
 
   return (
     <div className="App">
       <h1>Blackjack</h1>
       <button onClick={shuffleCards}>Shuffle Cards</button>
       <button onClick={newGame}>Start</button>
-    
+      <button onClick={handleGetValue}>Get Value</button>
+      <button onClick={handleStand}>Stand</button>
+      <button onClick={handleHit}>Hit</button>
 
       <div className="card-grid">
         <div>
